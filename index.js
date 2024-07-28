@@ -29,10 +29,12 @@ program
   .description("CLI to make courses")
   .version("0.8.0");
 
+// -----------------------------------the adding command ----------------------------------:)
 program
   .command("add")
   .alias("a")
   .description("adding a course")
+  // the blow comments takes argument and option but its only print them in the console :(
   // .argument("<title>", "add course title")
   // .option("--price <price>", "add course price")
   .action(() => {
@@ -61,6 +63,20 @@ program
           console.log("add course is done");
         });
       }
+    });
+  });
+
+program
+  .command("list")
+  .alias("l")
+  .description("list the course")
+  .action(() => {
+    fs.readFile(course_path, "utf-8", (err, content) => {
+      if (err) {
+        console.log("error", err);
+        process.exit();
+      }
+      console.table(JSON.parse(content));
     });
   });
 program.parse(process.argv);
