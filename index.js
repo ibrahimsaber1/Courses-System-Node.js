@@ -1,13 +1,28 @@
-// console.log("test conection");
+// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// ---------------------------------------------import the required modules for the project--------------------------------------
+// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// console.log(process.argv);
+import { Command } from "commander";
+import inquirer from "inquirer";
+import fs from "fs";
+import { json } from "stream/consumers";
 
-// if (process.argv[2] == "add") {
-//   console.log(`you are adding ${process.argv[3]} to the course list`);
-// }
-
-const { Command } = require("commander");
 const program = new Command();
+
+const questions = [
+  {
+    type: "input",
+    name: "title",
+    message: "pleas Enter The Course Title: ",
+  },
+  {
+    type: "number",
+    name: "price",
+    message: "pleas Enter The Course price: ",
+  },
+];
+
+const course_path = "./courses.json";
 
 program
   .name("COURSES-SYSTEM-NODE.JS")
@@ -18,9 +33,34 @@ program
   .command("add")
   .alias("a")
   .description("adding a course")
-  .argument("<title>", "add course title")
-  .option("--price <price>", "add course price")
-  .action((param, option) => {
-    console.log("param, option", param, option);
+  // .argument("<title>", "add course title")
+  // .option("--price <price>", "add course price")
+  .action(() => {
+    inquirer.prompt(questions).then((answers) => {
+      console.log(answers);
+      if (fs.existsSync(course_path)) {
+        fs.readFile(course_path, "utf-8", (err, filecontent) => {
+          if (err) {
+            console.log("error", err);
+            process.exit();
+          }
+          console.log("filecontent ==>", filecontent);
+          const filecontentASJson = JSON.parse(filecontent);
+          filecontentASJson.push(answers);
+          fs.writeFile(
+            course_path,
+            JSON.stringify(filecontentASJson),
+            "utf-8",
+            () => {
+              console.log("add course is done");
+            }
+          );
+        });
+      } else {
+        fs.writeFile(course_path, JSON.stringify([answers]), "utf-8", () => {
+          console.log("add course is done");
+        });
+      }
+    });
   });
 program.parse(process.argv);
