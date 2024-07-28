@@ -40,6 +40,4 @@ node index.js list
 
 - This project is licensed under the MIT License.
 
-  ```
-   You can copy and paste this entire block into your `README.md` file to keep the formatting intact.
-  ```
+  You can copy and paste this entire block into your `README.md` file to keep the formatting intact.
